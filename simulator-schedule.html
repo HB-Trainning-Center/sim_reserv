@@ -479,6 +479,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+console.log('Firebase initialized:', firebaseConfig.databaseURL);
 
 // ========== DATA ==========
 const MEMBERS = [
@@ -558,6 +559,7 @@ function doLogin() {
 
 // ========== FIREBASE ==========
 function loadUserData() {
+  document.getElementById('app').innerHTML = '<div style="text-align:center;padding:40px;color:#888;">연결 중...</div>';
   db.ref('reservations').on('value', snap => {
     allData = snap.val() || {};
     // load current user's existing selections
@@ -574,6 +576,9 @@ function loadUserData() {
     });
     if (isAdminView) renderAdmin();
     else renderReservation();
+  }, err => {
+    showToast('❌ DB 연결 오류: ' + err.message);
+    document.getElementById('app').innerHTML = '<div style="text-align:center;padding:40px;color:#e8443a;">Firebase 연결 실패: ' + err.message + '</div>';
   });
 }
 
