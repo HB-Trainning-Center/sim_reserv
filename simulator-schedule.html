@@ -483,8 +483,8 @@ console.log('Firebase initialized:', firebaseConfig.databaseURL);
 
 // ========== DATA ==========
 const MEMBERS = [
-  // 교수
-  '김대중', '정순호', '박정진', '이경우',
+  // 교수 (확인 전용)
+  '교수',
   // 수험생
   '김도아', '김유솔', '심아남', '박소연', '박재민',
   '어다현', '이윤서', '이재용', '정주원', '정창대'
@@ -497,6 +497,16 @@ const SLOTS = [
 ];
 
 const WEEKDAYS = ['일','월','화','수','목','금','토'];
+
+function isWeekend(d) {
+  const day = d.getDay();
+  return day === 0 || day === 5 || day === 6; // 일, 금, 토
+}
+
+function getSlotName(slot, date) {
+  if (slot.id === 't2' && isWeekend(date)) return '2타임';
+  return slot.name;
+}
 
 let currentUser = null;
 let isAdminView = false;
@@ -574,7 +584,7 @@ function loadUserData() {
       });
       if (userSlots.length) localSelections[key] = userSlots;
     });
-    if (isAdminView) renderAdmin();
+    if (currentUser === '교수' || isAdminView) renderAdmin();
     else renderReservation();
   }, err => {
     showToast('❌ DB 연결 오류: ' + err.message);
@@ -623,11 +633,12 @@ function renderReservation() {
     SLOTS.forEach(s => {
       const names = dayData[s.id] ? Object.keys(dayData[s.id]) : [];
       const isSelected = sel.includes(s.id);
+      const displayName = getSlotName(s, d);
       html += `
         <div class="time-slot ${isSelected?'selected':''}" onclick="toggleSlot('${key}','${s.id}')">
           <div class="check"></div>
           <div class="slot-info">
-            <div class="slot-name">${s.name}</div>
+            <div class="slot-name">${displayName}</div>
             <div class="slot-time">${s.time}</div>
           </div>
           <div class="slot-count">${names.length}명 신청</div>
@@ -691,6 +702,7 @@ function submitReservation() {
 
 // ========== ADMIN VIEW ==========
 function toggleAdminView() {
+  if (currentUser === '교수') return; // 교수는 항상 관리자 뷰
   isAdminView = !isAdminView;
   const btn = document.getElementById('btnToggleView');
   btn.textContent = isAdminView ? '📝 예약하기' : '📋 예약현황';
@@ -699,10 +711,19 @@ function toggleAdminView() {
 }
 
 function renderAdmin() {
+  const isProf = currentUser === '교수';
+  const btn = document.getElementById('btnToggleView');
+  if (isProf) {
+    btn.style.display = 'none';
+  } else {
+    btn.style.display = 'block';
+    btn.textContent = '📝 예약하기';
+  }
+  isAdminView = true;
+
   const dates = getDates();
   let totalT1=0, totalT2=0, totalT3=0;
 
-  // pre-count
   dates.forEach(d => {
     const dayData = allData[fmt(d)] || {};
     totalT1 += dayData.t1 ? Object.keys(dayData.t1).length : 0;
@@ -737,9 +758,10 @@ function renderAdmin() {
 
     SLOTS.forEach(s => {
       const names = dayData[s.id] ? Object.keys(dayData[s.id]) : [];
+      const displayName = getSlotName(s, d);
       html += `<div class="admin-slot">
         <div class="admin-slot-title">
-          <span class="admin-slot-tag mini-tag ${s.tagClass}">${s.name}</span>
+          <span class="admin-slot-tag mini-tag ${s.tagClass}">${displayName}</span>
           <span style="font-size:11px;color:var(--text-sub)">${s.time}</span>
           <span style="font-size:11px;font-weight:700;margin-left:auto">${names.length}명</span>
         </div>
