@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>시뮬레이터 실습 예약</title>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap');
+
+:root {
+  --bg: #f0f2f5;
+  --card: #ffffff;
+  --primary: #1a3a5c;
+  --primary-light: #2a5a8c;
+  --accent: #e8443a;
+  --accent-soft: #fff0ef;
+  --border: #d8dce3;
+  --text: #1a1a2e;
+  --text-sub: #6b7280;
+  --success: #10b981;
+  --success-bg: #ecfdf5;
+  --tag1: #dbeafe;
+  --tag1-text: #1e40af;
+  --tag2: #fef3c7;
+  --tag2-text: #92400e;
+  --tag3: #ede9fe;
+  --tag3-text: #5b21b6;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.10);
+  --radius: 10px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* HEADER */
+.header {
+  background: var(--primary);
+  color: white;
+  padding: 16px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.header-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header h1 {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+.header-sub {
+  font-size: 11px;
+  opacity: 0.7;
+  margin-top: 2px;
+  font-weight: 300;
+}
+.btn-view-toggle {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+.btn-view-toggle:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+/* MAIN */
+.main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* LOGIN */
+.login-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 40px 28px;
+  text-align: center;
+  margin-top: 60px;
+}
+.login-card h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.login-card p {
+  font-size: 13px;
+  color: var(--text-sub);
+  margin-bottom: 24px;
+}
+.login-card select {
+  width: 100%;
+  max-width: 280px;
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+  appearance: none;
+  background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat right 14px center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.login-card select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+.btn-login {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  margin: 16px auto 0;
+  padding: 12px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-login:hover { background: var(--primary-light); }
+
+/* RESERVATION VIEW */
+.user-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.user-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--primary);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.user-badge .dot {
+  width: 7px; height: 7px;
+  background: var(--success);
+  border-radius: 50%;
+}
+.btn-logout {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-sub);
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* DATE CARD */
+.date-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.date-card:hover { box-shadow: var(--shadow-lg); }
+.date-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  cursor: pointer;
+  user-select: none;
+}
+.date-label {
+  font-size: 15px;
+  font-weight: 600;
+}
+.date-label .weekday {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-sub);
+  margin-left: 6px;
+}
+.date-label .weekday.sat { color: #2563eb; }
+.date-label .weekday.sun { color: var(--accent); }
+.date-status {
+  display: flex;
+  gap: 4px;
+}
+.mini-tag {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+.mini-tag.t1 { background: var(--tag1); color: var(--tag1-text); }
+.mini-tag.t2 { background: var(--tag2); color: var(--tag2-text); }
+.mini-tag.t3 { background: var(--tag3); color: var(--tag3-text); }
+
+.date-body {
+  display: none;
+  padding: 0 16px 14px;
+}
+.date-body.open { display: block; }
+
+.time-slot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+.time-slot:hover { border-color: var(--primary-light); }
+.time-slot.selected {
+  border-color: var(--primary);
+  background: #f0f5ff;
+}
+.time-slot .check {
+  width: 20px; height: 20px;
+  border: 2px solid var(--border);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.time-slot.selected .check {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+.time-slot.selected .check::after {
+  content: '✓';
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+}
+.slot-info { flex: 1; margin-left: 10px; }
+.slot-name { font-size: 13px; font-weight: 600; }
+.slot-time { font-size: 11px; color: var(--text-sub); }
+.slot-count {
+  font-size: 11px;
+  color: var(--text-sub);
+  background: var(--bg);
+  padding: 3px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.date-arrow {
+  transition: transform 0.2s;
+  color: var(--text-sub);
+}
+.date-arrow.open { transform: rotate(180deg); }
+
+/* SUBMIT */
+.submit-bar {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  border-top: 1px solid var(--border);
+  padding: 12px 16px;
+  display: flex;
+  gap: 10px;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
+  margin: 0 -16px;
+}
+.btn-submit {
+  flex: 1;
+  padding: 13px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-submit:hover { background: var(--primary-light); }
+.btn-cancel {
+  padding: 13px 20px;
+  background: white;
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #1a1a2e;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0;
+  transition: all 0.3s;
+  z-index: 200;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ADMIN VIEW */
+.admin-date-group {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.admin-date-header {
+  background: var(--primary);
+  color: white;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.admin-slot {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--bg);
+}
+.admin-slot:last-child { border-bottom: none; }
+.admin-slot-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.admin-slot-tag {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+.admin-names {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.admin-name-chip {
+  font-size: 12px;
+  padding: 4px 10px;
+  background: var(--bg);
+  border-radius: 5px;
+  font-weight: 500;
+}
+.admin-empty {
+  font-size: 12px;
+  color: var(--text-sub);
+  font-style: italic;
+}
+
+.admin-summary {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.admin-summary h3 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.summary-item {
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+}
+.summary-item.t1 { background: var(--tag1); }
+.summary-item.t2 { background: var(--tag2); }
+.summary-item.t3 { background: var(--tag3); }
+.summary-num {
+  font-size: 22px;
+  font-weight: 900;
+}
+.summary-label {
+  font-size: 10px;
+  color: var(--text-sub);
+  margin-top: 2px;
+}
+
+.btn-csv {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--success);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 14px;
+}
+
+.fade-in { animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <h1>시뮬레이터 실습 예약</h1>
+      <div class="header-sub">한빛교육훈련센터</div>
+    </div>
+    <button class="btn-view-toggle" id="btnToggleView" style="display:none" onclick="toggleAdminView()">예약현황</button>
+  </div>
+</div>
+
+<div class="main" id="app"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ========== FIREBASE CONFIG ==========
+// ★ 새 Firebase 프로젝트 생성 후 아래 값을 교체하세요
+const firebaseConfig = {
+  apiKey: "AIzaSyA1SiqDicWFGuwpgbLcuFKe0Fa3C9_NypA",
+  authDomain: "sim-reservation.firebaseapp.com",
+  databaseURL: "https://sim-reservation-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "sim-reservation",
+  storageBucket: "sim-reservation.firebasestorage.app",
+  messagingSenderId: "656176434780",
+  appId: "1:656176434780:web:abd3e72919900027ba2099"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+console.log('Firebase initialized:', firebaseConfig.databaseURL);
+
+// ========== DATA ==========
+const MEMBERS = [
+  // 교수 (확인 전용)
+  '교수',
+  // 수험생
+  '김도아', '김유솔', '심아남', '박소연', '박재민',
+  '어다현', '이윤서', '이재용', '정주원', '정창대'
+];
+
+const SLOTS = [
+  { id: 't1', name: '1타임', time: '~ 18:00', tagClass: 't1' },
+  { id: 't2', name: '2타임 (교수지원)', time: '18:00 ~ 20:00', tagClass: 't2' },
+  { id: 't3', name: '3타임', time: '20:00 이후', tagClass: 't3' },
+];
+
+const WEEKDAYS = ['일','월','화','수','목','금','토'];
+
+function isWeekend(d) {
+  const day = d.getDay();
+  return day === 0 || day === 5 || day === 6; // 일, 금, 토
+}
+
+function getSlotName(slot, date) {
+  if (slot.id === 't2' && isWeekend(date)) return '2타임';
+  return slot.name;
+}
+
+let currentUser = null;
+let isAdminView = false;
+let allData = {};
+let localSelections = {}; // { 'YYYY-MM-DD': ['t1','t3'], ... }
+
+// ========== DATES ==========
+function getDates() {
+  const dates = [];
+  const today = new Date();
+  for (let i = 0; i < 10; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    dates.push(d);
+  }
+  return dates;
+}
+
+function fmt(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const dd = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${dd}`;
+}
+
+function fmtDisplay(d) {
+  return `${d.getMonth()+1}/${d.getDate()}`;
+}
+
+// ========== TOAST ==========
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ========== LOGIN ==========
+function renderLogin() {
+  document.getElementById('btnToggleView').style.display = 'none';
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <div class="login-card fade-in">
+      <h2>이름을 선택하세요</h2>
+      <p>시뮬레이터 실습 시간을 예약합니다</p>
+      <select id="selName">
+        <option value="">-- 이름 선택 --</option>
+        ${MEMBERS.map(n => `<option value="${n}">${n}</option>`).join('')}
+      </select>
+      <button class="btn-login" onclick="doLogin()">입장</button>
+    </div>`;
+}
+
+function doLogin() {
+  const name = document.getElementById('selName').value;
+  if (!name) { showToast('이름을 선택하세요'); return; }
+  currentUser = name;
+  loadUserData();
+}
+
+// ========== FIREBASE ==========
+function loadUserData() {
+  document.getElementById('app').innerHTML = '<div style="text-align:center;padding:40px;color:#888;">연결 중...</div>';
+  db.ref('reservations').on('value', snap => {
+    allData = snap.val() || {};
+    // load current user's existing selections
+    localSelections = {};
+    getDates().forEach(d => {
+      const key = fmt(d);
+      const dayData = allData[key] || {};
+      const userSlots = [];
+      SLOTS.forEach(s => {
+        const names = dayData[s.id] ? Object.keys(dayData[s.id]) : [];
+        if (names.includes(currentUser)) userSlots.push(s.id);
+      });
+      if (userSlots.length) localSelections[key] = userSlots;
+    });
+    if (currentUser === '교수' || isAdminView) renderAdmin();
+    else renderReservation();
+  }, err => {
+    showToast('❌ DB 연결 오류: ' + err.message);
+    document.getElementById('app').innerHTML = '<div style="text-align:center;padding:40px;color:#e8443a;">Firebase 연결 실패: ' + err.message + '</div>';
+  });
+}
+
+// ========== RESERVATION VIEW ==========
+function renderReservation() {
+  isAdminView = false;
+  const btn = document.getElementById('btnToggleView');
+  btn.style.display = 'block';
+  btn.textContent = '📋 예약현황';
+
+  const dates = getDates();
+  let html = `<div class="fade-in">
+    <div class="user-banner">
+      <div class="user-badge"><span class="dot"></span>${currentUser}</div>
+      <button class="btn-logout" onclick="doLogout()">나가기</button>
+    </div>`;
+
+  dates.forEach((d, idx) => {
+    const key = fmt(d);
+    const wd = WEEKDAYS[d.getDay()];
+    const wdClass = d.getDay()===0?'sun':d.getDay()===6?'sat':'';
+    const sel = localSelections[key] || [];
+    const dayData = allData[key] || {};
+
+    // mini tags for selected slots
+    const miniTags = sel.map(sid => {
+      const s = SLOTS.find(x=>x.id===sid);
+      return `<span class="mini-tag ${s.tagClass}">${s.name.replace(' (교수지원)','')}</span>`;
+    }).join('');
+
+    html += `
+    <div class="date-card">
+      <div class="date-header" onclick="toggleDate(${idx})">
+        <div class="date-label">${fmtDisplay(d)} <span class="weekday ${wdClass}">(${wd})</span></div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="date-status">${miniTags}</div>
+          <span class="date-arrow ${idx===0?'open':''}" id="arrow-${idx}">▾</span>
+        </div>
+      </div>
+      <div class="date-body ${idx===0?'open':''}" id="body-${idx}">`;
+
+    SLOTS.forEach(s => {
+      const names = dayData[s.id] ? Object.keys(dayData[s.id]) : [];
+      const isSelected = sel.includes(s.id);
+      const displayName = getSlotName(s, d);
+      html += `
+        <div class="time-slot ${isSelected?'selected':''}" onclick="toggleSlot('${key}','${s.id}')">
+          <div class="check"></div>
+          <div class="slot-info">
+            <div class="slot-name">${displayName}</div>
+            <div class="slot-time">${s.time}</div>
+          </div>
+          <div class="slot-count">${names.length}명 신청</div>
+        </div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  html += `
+    <div class="submit-bar">
+      <button class="btn-cancel" onclick="cancelAll()">전체취소</button>
+      <button class="btn-submit" onclick="submitReservation()">제출하기</button>
+    </div>
+  </div>`;
+
+  document.getElementById('app').innerHTML = html;
+}
+
+function toggleDate(idx) {
+  const body = document.getElementById('body-'+idx);
+  const arrow = document.getElementById('arrow-'+idx);
+  body.classList.toggle('open');
+  arrow.classList.toggle('open');
+}
+
+function toggleSlot(dateKey, slotId) {
+  if (!localSelections[dateKey]) localSelections[dateKey] = [];
+  const arr = localSelections[dateKey];
+  const i = arr.indexOf(slotId);
+  if (i >= 0) arr.splice(i, 1);
+  else arr.push(slotId);
+  if (!arr.length) delete localSelections[dateKey];
+  renderReservation();
+}
+
+function cancelAll() {
+  localSelections = {};
+  renderReservation();
+  showToast('전체 선택이 해제되었습니다');
+}
+
+function submitReservation() {
+  const updates = {};
+  getDates().forEach(d => {
+    const key = fmt(d);
+    SLOTS.forEach(s => {
+      const path = `reservations/${key}/${s.id}/${currentUser}`;
+      const sel = localSelections[key] || [];
+      if (sel.includes(s.id)) {
+        updates[path] = true;
+      } else {
+        updates[path] = null; // remove
+      }
+    });
+  });
+  db.ref().update(updates)
+    .then(() => showToast('✅ 예약이 저장되었습니다'))
+    .catch(e => showToast('❌ 오류: ' + e.message));
+}
+
+// ========== ADMIN VIEW ==========
+function toggleAdminView() {
+  if (currentUser === '교수') return; // 교수는 항상 관리자 뷰
+  isAdminView = !isAdminView;
+  const btn = document.getElementById('btnToggleView');
+  btn.textContent = isAdminView ? '📝 예약하기' : '📋 예약현황';
+  if (isAdminView) renderAdmin();
+  else renderReservation();
+}
+
+function renderAdmin() {
+  const isProf = currentUser === '교수';
+  const btn = document.getElementById('btnToggleView');
+  if (isProf) {
+    btn.style.display = 'none';
+  } else {
+    btn.style.display = 'block';
+    btn.textContent = '📝 예약하기';
+  }
+  isAdminView = true;
+
+  const dates = getDates();
+  let totalT1=0, totalT2=0, totalT3=0;
+
+  dates.forEach(d => {
+    const dayData = allData[fmt(d)] || {};
+    totalT1 += dayData.t1 ? Object.keys(dayData.t1).length : 0;
+    totalT2 += dayData.t2 ? Object.keys(dayData.t2).length : 0;
+    totalT3 += dayData.t3 ? Object.keys(dayData.t3).length : 0;
+  });
+
+  let html = `<div class="fade-in">
+    <div class="user-banner">
+      <div class="user-badge"><span class="dot"></span>${currentUser}</div>
+      <button class="btn-logout" onclick="doLogout()">나가기</button>
+    </div>
+
+    <div class="admin-summary">
+      <h3>10일간 총 신청 현황</h3>
+      <div class="summary-grid">
+        <div class="summary-item t1"><div class="summary-num">${totalT1}</div><div class="summary-label">1타임</div></div>
+        <div class="summary-item t2"><div class="summary-num">${totalT2}</div><div class="summary-label">2타임</div></div>
+        <div class="summary-item t3"><div class="summary-num">${totalT3}</div><div class="summary-label">3타임</div></div>
+      </div>
+    </div>
+
+    <button class="btn-csv" onclick="downloadCSV()">⬇ CSV 다운로드</button>`;
+
+  dates.forEach(d => {
+    const key = fmt(d);
+    const wd = WEEKDAYS[d.getDay()];
+    const dayData = allData[key] || {};
+
+    html += `<div class="admin-date-group">
+      <div class="admin-date-header">${fmtDisplay(d)} (${wd})</div>`;
+
+    SLOTS.forEach(s => {
+      const names = dayData[s.id] ? Object.keys(dayData[s.id]) : [];
+      const displayName = getSlotName(s, d);
+      html += `<div class="admin-slot">
+        <div class="admin-slot-title">
+          <span class="admin-slot-tag mini-tag ${s.tagClass}">${displayName}</span>
+          <span style="font-size:11px;color:var(--text-sub)">${s.time}</span>
+          <span style="font-size:11px;font-weight:700;margin-left:auto">${names.length}명</span>
+        </div>
+        <div class="admin-names">
+          ${names.length ? names.map(n => `<span class="admin-name-chip">${n}</span>`).join('') : '<span class="admin-empty">신청자 없음</span>'}
+        </div>
+      </div>`;
+    });
+
+    html += `</div>`;
+  });
+
+  html += `</div>`;
+  document.getElementById('app').innerHTML = html;
+}
+
+function downloadCSV() {
+  const dates = getDates();
+  let csv = '\uFEFF날짜,요일,1타임(~18시),2타임(18~20시),3타임(20시이후)\n';
+  dates.forEach(d => {
+    const key = fmt(d);
+    const wd = WEEKDAYS[d.getDay()];
+    const dayData = allData[key] || {};
+    const t1 = dayData.t1 ? Object.keys(dayData.t1).join(' / ') : '';
+    const t2 = dayData.t2 ? Object.keys(dayData.t2).join(' / ') : '';
+    const t3 = dayData.t3 ? Object.keys(dayData.t3).join(' / ') : '';
+    csv += `${key},${wd},"${t1}","${t2}","${t3}"\n`;
+  });
+  const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `시뮬레이터실습예약_${fmt(new Date())}.csv`;
+  a.click();
+}
+
+function doLogout() {
+  db.ref('reservations').off();
+  currentUser = null;
+  isAdminView = false;
+  localSelections = {};
+  renderLogin();
+}
+
+// ========== INIT ==========
+renderLogin();
+</script>
+</body>
+</html>
