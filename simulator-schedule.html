@@ -42,7 +42,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* HEADER */
 .header {
   background: var(--primary);
   color: white;
@@ -59,17 +58,8 @@ body {
   align-items: center;
   justify-content: space-between;
 }
-.header h1 {
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-.header-sub {
-  font-size: 11px;
-  opacity: 0.7;
-  margin-top: 2px;
-  font-weight: 300;
-}
+.header h1 { font-size: 17px; font-weight: 700; letter-spacing: -0.5px; }
+.header-sub { font-size: 11px; opacity: 0.7; margin-top: 2px; font-weight: 300; }
 .btn-view-toggle {
   background: rgba(255,255,255,0.15);
   border: 1px solid rgba(255,255,255,0.3);
@@ -82,16 +72,9 @@ body {
   transition: all 0.2s;
   font-weight: 500;
 }
-.btn-view-toggle:hover {
-  background: rgba(255,255,255,0.25);
-}
+.btn-view-toggle:hover { background: rgba(255,255,255,0.25); }
 
-/* MAIN */
-.main {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 16px;
-}
+.main { max-width: 800px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
 
 /* LOGIN */
 .login-card {
@@ -102,19 +85,10 @@ body {
   text-align: center;
   margin-top: 60px;
 }
-.login-card h2 {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-.login-card p {
-  font-size: 13px;
-  color: var(--text-sub);
-  margin-bottom: 24px;
-}
+.login-card h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.login-card p { font-size: 13px; color: var(--text-sub); margin-bottom: 24px; }
 .login-card select {
-  width: 100%;
-  max-width: 280px;
+  width: 100%; max-width: 280px;
   padding: 12px 16px;
   border: 2px solid var(--border);
   border-radius: 8px;
@@ -123,63 +97,46 @@ body {
   appearance: none;
   background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat right 14px center;
   cursor: pointer;
-  transition: border-color 0.2s;
 }
-.login-card select:focus {
-  outline: none;
-  border-color: var(--primary);
-}
+.login-card select:focus { outline: none; border-color: var(--primary); }
 .btn-login {
-  display: block;
-  width: 100%;
-  max-width: 280px;
-  margin: 16px auto 0;
-  padding: 12px;
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  transition: background 0.2s;
+  display: block; width: 100%; max-width: 280px;
+  margin: 16px auto 0; padding: 12px;
+  background: var(--primary); color: white; border: none;
+  border-radius: 8px; font-size: 15px; font-weight: 600;
+  font-family: inherit; cursor: pointer;
 }
 .btn-login:hover { background: var(--primary-light); }
 
-/* RESERVATION VIEW */
+/* USER BANNER */
 .user-banner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 12px;
 }
 .user-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--primary);
-  color: white;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--primary); color: white;
+  padding: 6px 14px; border-radius: 20px;
+  font-size: 13px; font-weight: 600;
 }
-.user-badge .dot {
-  width: 7px; height: 7px;
-  background: var(--success);
-  border-radius: 50%;
-}
+.user-badge .dot { width: 7px; height: 7px; background: var(--success); border-radius: 50%; }
 .btn-logout {
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--text-sub);
-  padding: 5px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-family: inherit;
-  cursor: pointer;
+  background: none; border: 1px solid var(--border); color: var(--text-sub);
+  padding: 5px 12px; border-radius: 6px; font-size: 12px;
+  font-family: inherit; cursor: pointer;
 }
+
+/* TOOLBAR */
+.toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.btn-expand-all {
+  background: none; border: 1px solid var(--border); color: var(--text-sub);
+  padding: 5px 12px; border-radius: 6px; font-size: 12px;
+  font-family: inherit; cursor: pointer;
+}
+.btn-expand-all:hover { background: var(--card); }
 
 /* DATE CARD */
 .date-card {
@@ -189,262 +146,221 @@ body {
   margin-bottom: 10px;
   overflow: hidden;
   transition: box-shadow 0.2s;
+  border-left: 4px solid transparent;
 }
 .date-card:hover { box-shadow: var(--shadow-lg); }
+.date-card.has-selection { border-left-color: var(--primary); }
+.date-card.is-today { border-left-color: var(--success); }
+.date-card.has-selection.is-today { border-left-color: var(--success); }
+
 .date-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  cursor: pointer;
-  user-select: none;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; cursor: pointer; user-select: none;
 }
-.date-label {
-  font-size: 15px;
-  font-weight: 600;
-}
-.date-label .weekday {
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--text-sub);
-  margin-left: 6px;
-}
+.date-label { font-size: 15px; font-weight: 600; }
+.date-label .weekday { font-size: 12px; font-weight: 400; color: var(--text-sub); margin-left: 6px; }
 .date-label .weekday.sat { color: #2563eb; }
 .date-label .weekday.sun { color: var(--accent); }
-.date-status {
-  display: flex;
-  gap: 4px;
+.today-badge {
+  display: inline-block;
+  background: var(--success); color: white;
+  font-size: 10px; font-weight: 700;
+  padding: 1px 6px; border-radius: 4px;
+  margin-left: 6px; vertical-align: middle;
 }
-.mini-tag {
-  font-size: 10px;
-  padding: 2px 7px;
-  border-radius: 4px;
-  font-weight: 500;
-}
+.date-status { display: flex; gap: 4px; }
+.mini-tag { font-size: 10px; padding: 2px 7px; border-radius: 4px; font-weight: 500; }
 .mini-tag.t1 { background: var(--tag1); color: var(--tag1-text); }
 .mini-tag.t2 { background: var(--tag2); color: var(--tag2-text); }
 .mini-tag.t3 { background: var(--tag3); color: var(--tag3-text); }
 
-.date-body {
-  display: none;
-  padding: 0 16px 14px;
-}
+.date-body { display: none; padding: 0 16px 14px; }
 .date-body.open { display: block; }
 
 .time-slot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 12px;
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  margin-bottom: 6px;
-  cursor: pointer;
-  transition: all 0.15s;
-  user-select: none;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 8px;
+  margin-bottom: 6px; cursor: pointer; transition: all 0.15s; user-select: none;
 }
 .time-slot:hover { border-color: var(--primary-light); }
-.time-slot.selected {
-  border-color: var(--primary);
-  background: #f0f5ff;
-}
+.time-slot.selected { border-color: var(--primary); background: #f0f5ff; }
 .time-slot .check {
-  width: 20px; height: 20px;
-  border: 2px solid var(--border);
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: all 0.15s;
+  width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all 0.15s;
 }
-.time-slot.selected .check {
-  background: var(--primary);
-  border-color: var(--primary);
-}
-.time-slot.selected .check::after {
-  content: '✓';
-  color: white;
-  font-size: 13px;
-  font-weight: 700;
-}
+.time-slot.selected .check { background: var(--primary); border-color: var(--primary); }
+.time-slot.selected .check::after { content: '✓'; color: white; font-size: 13px; font-weight: 700; }
 .slot-info { flex: 1; margin-left: 10px; }
 .slot-name { font-size: 13px; font-weight: 600; }
 .slot-time { font-size: 11px; color: var(--text-sub); }
 .slot-count {
-  font-size: 11px;
-  color: var(--text-sub);
-  background: var(--bg);
-  padding: 3px 8px;
-  border-radius: 10px;
-  white-space: nowrap;
+  font-size: 11px; color: var(--text-sub); background: var(--bg);
+  padding: 3px 8px; border-radius: 10px; white-space: nowrap;
 }
 
-.date-arrow {
-  transition: transform 0.2s;
-  color: var(--text-sub);
-}
+.date-arrow { transition: transform 0.2s; color: var(--text-sub); }
 .date-arrow.open { transform: rotate(180deg); }
 
-/* SUBMIT */
+/* SUBMIT BAR */
 .submit-bar {
-  position: sticky;
-  bottom: 0;
-  background: white;
-  border-top: 1px solid var(--border);
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: white; border-top: 1px solid var(--border);
   padding: 12px 16px;
-  display: flex;
-  gap: 10px;
   box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
-  margin: 0 -16px;
+  z-index: 50;
+}
+.submit-bar-inner {
+  max-width: 800px; margin: 0 auto; width: 100%;
+  display: flex; gap: 10px;
 }
 .btn-submit {
-  flex: 1;
-  padding: 13px;
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  transition: background 0.2s;
+  flex: 1; padding: 13px; background: var(--primary); color: white;
+  border: none; border-radius: 8px; font-size: 15px; font-weight: 600;
+  font-family: inherit; cursor: pointer; transition: background 0.2s;
 }
 .btn-submit:hover { background: var(--primary-light); }
+.btn-submit.has-changes { background: var(--accent); animation: pulse 1.5s infinite; }
+.btn-submit.has-changes:hover { background: #d03a30; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.85; } }
 .btn-cancel {
-  padding: 13px 20px;
-  background: white;
-  color: var(--accent);
-  border: 2px solid var(--accent);
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
+  padding: 13px 20px; background: white; color: var(--accent);
+  border: 2px solid var(--accent); border-radius: 8px; font-size: 14px;
+  font-weight: 600; font-family: inherit; cursor: pointer;
 }
 
 /* TOAST */
 .toast {
-  position: fixed;
-  bottom: 80px;
-  left: 50%;
+  position: fixed; bottom: 80px; left: 50%;
   transform: translateX(-50%) translateY(20px);
-  background: #1a1a2e;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  opacity: 0;
-  transition: all 0.3s;
-  z-index: 200;
-  white-space: nowrap;
+  background: #1a1a2e; color: white;
+  padding: 12px 24px; border-radius: 8px;
+  font-size: 13px; font-weight: 500;
+  opacity: 0; transition: all 0.3s; z-index: 200;
+  max-width: 90vw; text-align: center;
+  line-height: 1.4;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* ADMIN VIEW */
+/* CONFIRM DIALOG */
+.confirm-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 300;
+}
+.confirm-box {
+  background: white; border-radius: 12px; padding: 24px;
+  max-width: 320px; width: 90%; text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+.confirm-box h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.confirm-box p { font-size: 13px; color: var(--text-sub); margin-bottom: 20px; line-height: 1.5; white-space: pre-line; }
+.confirm-btns { display: flex; gap: 8px; }
+.confirm-btns button {
+  flex: 1; padding: 10px; border-radius: 8px; font-size: 14px;
+  font-weight: 600; font-family: inherit; cursor: pointer; border: none;
+}
+.confirm-btns .btn-yes { background: var(--primary); color: white; }
+.confirm-btns .btn-no { background: var(--bg); color: var(--text); }
+
+/* ADMIN */
 .admin-date-group {
-  background: var(--card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  margin-bottom: 12px;
-  overflow: hidden;
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow); margin-bottom: 12px; overflow: hidden;
 }
+.admin-date-group.empty-day { opacity: 0.45; }
 .admin-date-header {
-  background: var(--primary);
-  color: white;
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 600;
+  background: var(--primary); color: white;
+  padding: 10px 16px; font-size: 14px; font-weight: 600;
+  display: flex; justify-content: space-between; align-items: center;
 }
-.admin-slot {
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--bg);
+.admin-day-total {
+  background: rgba(255,255,255,0.2); padding: 2px 10px;
+  border-radius: 10px; font-size: 12px;
 }
+.admin-slot { padding: 10px 16px; border-bottom: 1px solid var(--bg); }
 .admin-slot:last-child { border-bottom: none; }
 .admin-slot-title {
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 5px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  font-size: 13px; font-weight: 600; margin-bottom: 5px;
+  display: flex; align-items: center; gap: 8px;
 }
-.admin-slot-tag {
-  font-size: 10px;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-weight: 600;
-}
-.admin-names {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-}
+.admin-names { display: flex; flex-wrap: wrap; gap: 5px; }
 .admin-name-chip {
-  font-size: 12px;
-  padding: 4px 10px;
-  background: var(--bg);
-  border-radius: 5px;
-  font-weight: 500;
+  font-size: 12px; padding: 4px 10px;
+  background: var(--bg); border-radius: 5px; font-weight: 500;
 }
-.admin-empty {
-  font-size: 12px;
-  color: var(--text-sub);
-  font-style: italic;
-}
+.admin-empty { font-size: 12px; color: var(--text-sub); font-style: italic; }
 
 .admin-summary {
-  background: var(--card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 16px;
-  margin-bottom: 16px;
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 16px; margin-bottom: 12px;
 }
-.admin-summary h3 {
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-.summary-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-.summary-item {
-  text-align: center;
-  padding: 10px;
-  border-radius: 8px;
-}
+.admin-summary h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.admin-summary .date-range { font-size: 11px; color: var(--text-sub); margin-bottom: 10px; }
+.summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.summary-item { text-align: center; padding: 10px; border-radius: 8px; }
 .summary-item.t1 { background: var(--tag1); }
 .summary-item.t2 { background: var(--tag2); }
 .summary-item.t3 { background: var(--tag3); }
-.summary-num {
-  font-size: 22px;
-  font-weight: 900;
-}
-.summary-label {
-  font-size: 10px;
-  color: var(--text-sub);
-  margin-top: 2px;
-}
+.summary-num { font-size: 22px; font-weight: 900; }
+.summary-label { font-size: 10px; color: var(--text-sub); margin-top: 2px; }
 
 .btn-csv {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--success);
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-family: inherit;
-  font-weight: 600;
-  cursor: pointer;
-  margin-bottom: 14px;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--success); color: white; border: none;
+  padding: 8px 16px; border-radius: 6px; font-size: 13px;
+  font-family: inherit; font-weight: 600; cursor: pointer;
 }
+
+/* ADMIN TABS */
+.admin-tabs {
+  display: flex; gap: 0;
+  background: var(--bg); border-radius: 8px; padding: 3px;
+}
+.admin-tab {
+  flex: 1; padding: 8px; text-align: center; border-radius: 6px;
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  background: transparent; border: none; font-family: inherit;
+  color: var(--text-sub); transition: all 0.2s;
+}
+.admin-tab.active { background: white; color: var(--text); font-weight: 600; box-shadow: var(--shadow); }
+
+/* MISSING USERS */
+.missing-box {
+  background: var(--accent-soft); border: 1px solid #fecaca;
+  border-radius: 8px; padding: 12px 16px; margin-bottom: 14px;
+}
+.missing-box .label { font-size: 12px; font-weight: 600; color: var(--accent); margin-bottom: 6px; }
+.missing-box .names { font-size: 13px; color: var(--text); }
+
+/* PERSON VIEW */
+.person-card {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow); margin-bottom: 10px; padding: 14px 16px;
+}
+.person-card .person-name { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+.person-card .person-slots { display: flex; flex-wrap: wrap; gap: 5px; }
+.person-slot-chip {
+  font-size: 11px; padding: 4px 8px; border-radius: 5px;
+  font-weight: 500;
+}
+.person-card.no-reservation {
+  opacity: 0.5; border-left: 3px solid var(--accent);
+}
+.person-no-label {
+  font-size: 10px; color: var(--accent); margin-left: 8px; font-weight: 600;
+}
+
+/* NEW BADGE */
+.new-badge {
+  position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
+  background: var(--accent); color: white;
+  padding: 8px 20px; border-radius: 20px;
+  font-size: 13px; font-weight: 600;
+  box-shadow: var(--shadow-lg); z-index: 150;
+  cursor: pointer; animation: slideDown 0.3s ease;
+}
+@keyframes slideDown { from { opacity:0; transform: translateX(-50%) translateY(-20px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
 
 .fade-in { animation: fadeIn 0.25s ease; }
 @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
@@ -464,10 +380,11 @@ body {
 
 <div class="main" id="app"></div>
 <div class="toast" id="toast"></div>
+<div id="confirmArea"></div>
+<div id="newBadgeArea"></div>
 
 <script>
 // ========== FIREBASE CONFIG ==========
-// ★ 새 Firebase 프로젝트 생성 후 아래 값을 교체하세요
 const firebaseConfig = {
   apiKey: "AIzaSyA1SiqDicWFGuwpgbLcuFKe0Fa3C9_NypA",
   authDomain: "sim-reservation.firebaseapp.com",
@@ -479,16 +396,14 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
-console.log('Firebase initialized:', firebaseConfig.databaseURL);
 
 // ========== DATA ==========
 const MEMBERS = [
-  // 교수 (확인 전용)
   '교수',
-  // 수험생
   '김도아', '김유솔', '심아남', '박소연', '박재민',
   '어다현', '이윤서', '이재용', '정주원', '정창대'
 ];
+const STUDENTS = MEMBERS.filter(n => n !== '교수');
 
 const SLOTS = [
   { id: 't1', name: '1타임', time: '~ 18:00', tagClass: 't1' },
@@ -500,7 +415,7 @@ const WEEKDAYS = ['일','월','화','수','목','금','토'];
 
 function isWeekend(d) {
   const day = d.getDay();
-  return day === 0 || day === 5 || day === 6; // 일, 금, 토
+  return day === 0 || day === 5 || day === 6;
 }
 
 function getSlotName(slot, date) {
@@ -510,13 +425,19 @@ function getSlotName(slot, date) {
 
 let currentUser = null;
 let isAdminView = false;
+let adminTab = 'date';
 let allData = {};
-let localSelections = {}; // { 'YYYY-MM-DD': ['t1','t3'], ... }
+let savedSelections = {};
+let localSelections = {};
+let allExpanded = false;
+let lastDataSnapshot = null;
+let isFirstLoad = true;
 
 // ========== DATES ==========
 function getDates() {
   const dates = [];
   const today = new Date();
+  today.setHours(0,0,0,0);
   for (let i = 0; i < 10; i++) {
     const d = new Date(today);
     d.setDate(today.getDate() + i);
@@ -525,36 +446,67 @@ function getDates() {
   return dates;
 }
 
+function isToday(d) {
+  const today = new Date();
+  return d.getFullYear() === today.getFullYear() && d.getMonth() === today.getMonth() && d.getDate() === today.getDate();
+}
+
 function fmt(d) {
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,'0');
-  const dd = String(d.getDate()).padStart(2,'0');
-  return `${y}-${m}-${dd}`;
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 
 function fmtDisplay(d) {
   return `${d.getMonth()+1}/${d.getDate()}`;
 }
 
-// ========== TOAST ==========
+// ========== TOAST & CONFIRM ==========
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function showConfirm(title, msg, onYes) {
+  document.getElementById('confirmArea').innerHTML = `
+    <div class="confirm-overlay" onclick="closeConfirm()">
+      <div class="confirm-box" onclick="event.stopPropagation()">
+        <h3>${title}</h3>
+        <p>${msg}</p>
+        <div class="confirm-btns">
+          <button class="btn-no" onclick="closeConfirm()">취소</button>
+          <button class="btn-yes" id="confirmYesBtn">확인</button>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('confirmYesBtn').onclick = () => { closeConfirm(); onYes(); };
+}
+
+function closeConfirm() { document.getElementById('confirmArea').innerHTML = ''; }
+
+// ========== CHANGE DETECTION ==========
+function hasChanges() {
+  const dates = getDates();
+  for (const d of dates) {
+    const key = fmt(d);
+    const saved = (savedSelections[key] || []).sort().join(',');
+    const local = (localSelections[key] || []).sort().join(',');
+    if (saved !== local) return true;
+  }
+  return false;
 }
 
 // ========== LOGIN ==========
 function renderLogin() {
   document.getElementById('btnToggleView').style.display = 'none';
-  const app = document.getElementById('app');
-  app.innerHTML = `
+  const lastUser = localStorage.getItem('sim_last_user') || '';
+  document.getElementById('app').innerHTML = `
     <div class="login-card fade-in">
       <h2>이름을 선택하세요</h2>
       <p>시뮬레이터 실습 시간을 예약합니다</p>
       <select id="selName">
         <option value="">-- 이름 선택 --</option>
-        ${MEMBERS.map(n => `<option value="${n}">${n}</option>`).join('')}
+        ${MEMBERS.map(n => `<option value="${n}" ${n===lastUser?'selected':''}>${n}</option>`).join('')}
       </select>
       <button class="btn-login" onclick="doLogin()">입장</button>
     </div>`;
@@ -564,6 +516,8 @@ function doLogin() {
   const name = document.getElementById('selName').value;
   if (!name) { showToast('이름을 선택하세요'); return; }
   currentUser = name;
+  localStorage.setItem('sim_last_user', name);
+  isFirstLoad = true;
   loadUserData();
 }
 
@@ -571,8 +525,17 @@ function doLogin() {
 function loadUserData() {
   document.getElementById('app').innerHTML = '<div style="text-align:center;padding:40px;color:#888;">연결 중...</div>';
   db.ref('reservations').on('value', snap => {
-    allData = snap.val() || {};
-    // load current user's existing selections
+    const newData = snap.val() || {};
+    const newJson = JSON.stringify(newData);
+
+    if (!isFirstLoad && lastDataSnapshot && lastDataSnapshot !== newJson && (currentUser === '교수' || isAdminView)) {
+      showNewBadge();
+    }
+    lastDataSnapshot = newJson;
+    isFirstLoad = false;
+
+    allData = newData;
+    savedSelections = {};
     localSelections = {};
     getDates().forEach(d => {
       const key = fmt(d);
@@ -582,15 +545,25 @@ function loadUserData() {
         const names = dayData[s.id] ? Object.keys(dayData[s.id]) : [];
         if (names.includes(currentUser)) userSlots.push(s.id);
       });
-      if (userSlots.length) localSelections[key] = userSlots;
+      if (userSlots.length) {
+        savedSelections[key] = [...userSlots];
+        localSelections[key] = [...userSlots];
+      }
     });
     if (currentUser === '교수' || isAdminView) renderAdmin();
     else renderReservation();
   }, err => {
-    showToast('❌ DB 연결 오류: ' + err.message);
-    document.getElementById('app').innerHTML = '<div style="text-align:center;padding:40px;color:#e8443a;">Firebase 연결 실패: ' + err.message + '</div>';
+    showToast('DB 연결 오류: ' + err.message);
+    document.getElementById('app').innerHTML = '<div style="text-align:center;padding:40px;color:#e8443a;">Firebase 연결 실패:<br>' + err.message + '</div>';
   });
 }
+
+function showNewBadge() {
+  document.getElementById('newBadgeArea').innerHTML = '<div class="new-badge" onclick="dismissBadge()">🔔 신규 예약 변경! (탭하여 닫기)</div>';
+  setTimeout(() => dismissBadge(), 5000);
+}
+
+function dismissBadge() { document.getElementById('newBadgeArea').innerHTML = ''; }
 
 // ========== RESERVATION VIEW ==========
 function renderReservation() {
@@ -600,10 +573,16 @@ function renderReservation() {
   btn.textContent = '📋 예약현황';
 
   const dates = getDates();
+  const changed = hasChanges();
+
   let html = `<div class="fade-in">
     <div class="user-banner">
       <div class="user-badge"><span class="dot"></span>${currentUser}</div>
       <button class="btn-logout" onclick="doLogout()">나가기</button>
+    </div>
+    <div class="toolbar">
+      <span style="font-size:12px;color:var(--text-sub)">향후 10일간 실습 시간 선택</span>
+      <button class="btn-expand-all" onclick="toggleExpandAll()">${allExpanded ? '전체 접기 ▲' : '전체 펼치기 ▼'}</button>
     </div>`;
 
   dates.forEach((d, idx) => {
@@ -612,23 +591,28 @@ function renderReservation() {
     const wdClass = d.getDay()===0?'sun':d.getDay()===6?'sat':'';
     const sel = localSelections[key] || [];
     const dayData = allData[key] || {};
+    const isTodayFlag = isToday(d);
+    const hasSel = sel.length > 0;
+    const isOpen = allExpanded || idx === 0;
 
-    // mini tags for selected slots
     const miniTags = sel.map(sid => {
       const s = SLOTS.find(x=>x.id===sid);
-      return `<span class="mini-tag ${s.tagClass}">${s.name.replace(' (교수지원)','')}</span>`;
+      return `<span class="mini-tag ${s.tagClass}">${getSlotName(s,d).replace(' (교수지원)','')}</span>`;
     }).join('');
 
     html += `
-    <div class="date-card">
+    <div class="date-card ${hasSel?'has-selection':''} ${isTodayFlag?'is-today':''}">
       <div class="date-header" onclick="toggleDate(${idx})">
-        <div class="date-label">${fmtDisplay(d)} <span class="weekday ${wdClass}">(${wd})</span></div>
+        <div class="date-label">
+          ${fmtDisplay(d)} <span class="weekday ${wdClass}">(${wd})</span>
+          ${isTodayFlag ? '<span class="today-badge">오늘</span>' : ''}
+        </div>
         <div style="display:flex;align-items:center;gap:8px;">
           <div class="date-status">${miniTags}</div>
-          <span class="date-arrow ${idx===0?'open':''}" id="arrow-${idx}">▾</span>
+          <span class="date-arrow ${isOpen?'open':''}" id="arrow-${idx}">▾</span>
         </div>
       </div>
-      <div class="date-body ${idx===0?'open':''}" id="body-${idx}">`;
+      <div class="date-body ${isOpen?'open':''}" id="body-${idx}">`;
 
     SLOTS.forEach(s => {
       const names = dayData[s.id] ? Object.keys(dayData[s.id]) : [];
@@ -650,8 +634,12 @@ function renderReservation() {
 
   html += `
     <div class="submit-bar">
-      <button class="btn-cancel" onclick="cancelAll()">전체취소</button>
-      <button class="btn-submit" onclick="submitReservation()">제출하기</button>
+      <div class="submit-bar-inner">
+        <button class="btn-cancel" onclick="cancelAll()">전체취소</button>
+        <button class="btn-submit ${changed?'has-changes':''}" onclick="doSubmit()">
+          ${changed ? '💾 변경사항 저장' : '제출하기'}
+        </button>
+      </div>
     </div>
   </div>`;
 
@@ -665,6 +653,11 @@ function toggleDate(idx) {
   arrow.classList.toggle('open');
 }
 
+function toggleExpandAll() {
+  allExpanded = !allExpanded;
+  renderReservation();
+}
+
 function toggleSlot(dateKey, slotId) {
   if (!localSelections[dateKey]) localSelections[dateKey] = [];
   const arr = localSelections[dateKey];
@@ -676,9 +669,28 @@ function toggleSlot(dateKey, slotId) {
 }
 
 function cancelAll() {
-  localSelections = {};
-  renderReservation();
-  showToast('전체 선택이 해제되었습니다');
+  const anySel = Object.keys(localSelections).length > 0;
+  if (!anySel) { showToast('선택된 항목이 없습니다'); return; }
+  showConfirm('전체 취소', '모든 선택을 해제하시겠습니까?', () => {
+    localSelections = {};
+    renderReservation();
+    showToast('전체 선택이 해제되었습니다');
+  });
+}
+
+function doSubmit() {
+  const totalSelected = Object.values(localSelections).reduce((s,a) => s+a.length, 0);
+  const totalSaved = Object.values(savedSelections).reduce((s,a) => s+a.length, 0);
+
+  if (totalSelected === 0 && totalSaved > 0) {
+    showConfirm('예약 전체 취소', '선택된 타임이 없습니다.\n기존 예약이 모두 취소됩니다.\n계속하시겠습니까?', submitReservation);
+    return;
+  }
+  if (!hasChanges()) {
+    showToast('변경사항이 없습니다');
+    return;
+  }
+  submitReservation();
 }
 
 function submitReservation() {
@@ -688,21 +700,28 @@ function submitReservation() {
     SLOTS.forEach(s => {
       const path = `reservations/${key}/${s.id}/${currentUser}`;
       const sel = localSelections[key] || [];
-      if (sel.includes(s.id)) {
-        updates[path] = true;
-      } else {
-        updates[path] = null; // remove
-      }
+      updates[path] = sel.includes(s.id) ? true : null;
     });
   });
   db.ref().update(updates)
-    .then(() => showToast('✅ 예약이 저장되었습니다'))
-    .catch(e => showToast('❌ 오류: ' + e.message));
+    .then(() => {
+      const lines = [];
+      getDates().forEach(d => {
+        const key = fmt(d);
+        const sel = localSelections[key] || [];
+        if (sel.length) {
+          const names = sel.map(sid => getSlotName(SLOTS.find(x=>x.id===sid), d).replace(' (교수지원)',''));
+          lines.push(`${fmtDisplay(d)} ${names.join('+')}`);
+        }
+      });
+      showToast('✅ 저장 완료! ' + (lines.length ? lines.join(', ') : '전체 취소됨'));
+    })
+    .catch(e => showToast('오류: ' + e.message));
 }
 
 // ========== ADMIN VIEW ==========
 function toggleAdminView() {
-  if (currentUser === '교수') return; // 교수는 항상 관리자 뷰
+  if (currentUser === '교수') return;
   isAdminView = !isAdminView;
   const btn = document.getElementById('btnToggleView');
   btn.textContent = isAdminView ? '📝 예약하기' : '📋 예약현황';
@@ -713,12 +732,8 @@ function toggleAdminView() {
 function renderAdmin() {
   const isProf = currentUser === '교수';
   const btn = document.getElementById('btnToggleView');
-  if (isProf) {
-    btn.style.display = 'none';
-  } else {
-    btn.style.display = 'block';
-    btn.textContent = '📝 예약하기';
-  }
+  if (isProf) btn.style.display = 'none';
+  else { btn.style.display = 'block'; btn.textContent = '📝 예약하기'; }
   isAdminView = true;
 
   const dates = getDates();
@@ -731,6 +746,16 @@ function renderAdmin() {
     totalT3 += dayData.t3 ? Object.keys(dayData.t3).length : 0;
   });
 
+  const submittedUsers = new Set();
+  dates.forEach(d => {
+    const dayData = allData[fmt(d)] || {};
+    SLOTS.forEach(s => { if (dayData[s.id]) Object.keys(dayData[s.id]).forEach(n => submittedUsers.add(n)); });
+  });
+  const missingUsers = STUDENTS.filter(n => !submittedUsers.has(n));
+
+  const firstDate = dates[0], lastDate = dates[dates.length-1];
+  const rangeStr = `${fmtDisplay(firstDate)}(${WEEKDAYS[firstDate.getDay()]}) ~ ${fmtDisplay(lastDate)}(${WEEKDAYS[lastDate.getDay()]})`;
+
   let html = `<div class="fade-in">
     <div class="user-banner">
       <div class="user-badge"><span class="dot"></span>${currentUser}</div>
@@ -738,58 +763,115 @@ function renderAdmin() {
     </div>
 
     <div class="admin-summary">
-      <h3>10일간 총 신청 현황</h3>
+      <h3>신청 현황 요약</h3>
+      <div class="date-range">${rangeStr}</div>
       <div class="summary-grid">
         <div class="summary-item t1"><div class="summary-num">${totalT1}</div><div class="summary-label">1타임</div></div>
         <div class="summary-item t2"><div class="summary-num">${totalT2}</div><div class="summary-label">2타임</div></div>
         <div class="summary-item t3"><div class="summary-num">${totalT3}</div><div class="summary-label">3타임</div></div>
       </div>
-    </div>
+    </div>`;
 
-    <button class="btn-csv" onclick="downloadCSV()">⬇ CSV 다운로드</button>`;
+  if (missingUsers.length > 0) {
+    html += `<div class="missing-box">
+      <div class="label">⚠ 미신청자 (${missingUsers.length}명)</div>
+      <div class="names">${missingUsers.join(', ')}</div>
+    </div>`;
+  }
 
-  dates.forEach(d => {
-    const key = fmt(d);
-    const wd = WEEKDAYS[d.getDay()];
-    const dayData = allData[key] || {};
+  html += `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <div class="admin-tabs" style="flex:1;margin-right:10px;">
+        <button class="admin-tab ${adminTab==='date'?'active':''}" onclick="setAdminTab('date')">📅 날짜별</button>
+        <button class="admin-tab ${adminTab==='person'?'active':''}" onclick="setAdminTab('person')">👤 인원별</button>
+      </div>
+      <button class="btn-csv" onclick="downloadCSV()">⬇ CSV</button>
+    </div>`;
 
-    html += `<div class="admin-date-group">
-      <div class="admin-date-header">${fmtDisplay(d)} (${wd})</div>`;
+  if (adminTab === 'date') {
+    dates.forEach(d => {
+      const key = fmt(d);
+      const wd = WEEKDAYS[d.getDay()];
+      const dayData = allData[key] || {};
+      const isTodayFlag = isToday(d);
+      let dayTotal = 0;
+      SLOTS.forEach(s => { dayTotal += dayData[s.id] ? Object.keys(dayData[s.id]).length : 0; });
 
-    SLOTS.forEach(s => {
-      const names = dayData[s.id] ? Object.keys(dayData[s.id]) : [];
-      const displayName = getSlotName(s, d);
-      html += `<div class="admin-slot">
-        <div class="admin-slot-title">
-          <span class="admin-slot-tag mini-tag ${s.tagClass}">${displayName}</span>
-          <span style="font-size:11px;color:var(--text-sub)">${s.time}</span>
-          <span style="font-size:11px;font-weight:700;margin-left:auto">${names.length}명</span>
-        </div>
-        <div class="admin-names">
-          ${names.length ? names.map(n => `<span class="admin-name-chip">${n}</span>`).join('') : '<span class="admin-empty">신청자 없음</span>'}
-        </div>
-      </div>`;
+      html += `<div class="admin-date-group ${dayTotal===0?'empty-day':''}">
+        <div class="admin-date-header">
+          <span>${fmtDisplay(d)} (${wd})${isTodayFlag?' — 오늘':''}</span>
+          <span class="admin-day-total">총 ${dayTotal}명</span>
+        </div>`;
+
+      SLOTS.forEach(s => {
+        const names = dayData[s.id] ? Object.keys(dayData[s.id]) : [];
+        const displayName = getSlotName(s, d);
+        html += `<div class="admin-slot">
+          <div class="admin-slot-title">
+            <span class="admin-slot-tag mini-tag ${s.tagClass}">${displayName}</span>
+            <span style="font-size:11px;color:var(--text-sub)">${s.time}</span>
+            <span style="font-size:11px;font-weight:700;margin-left:auto">${names.length}명</span>
+          </div>
+          <div class="admin-names">
+            ${names.length ? names.map(n => `<span class="admin-name-chip">${n}</span>`).join('') : '<span class="admin-empty">신청자 없음</span>'}
+          </div>
+        </div>`;
+      });
+      html += `</div>`;
     });
-
-    html += `</div>`;
-  });
+  } else {
+    STUDENTS.forEach(student => {
+      const entries = [];
+      dates.forEach(d => {
+        const key = fmt(d);
+        const dayData = allData[key] || {};
+        SLOTS.forEach(s => {
+          const names = dayData[s.id] ? Object.keys(dayData[s.id]) : [];
+          if (names.includes(student)) entries.push({ date: d, slot: s });
+        });
+      });
+      const hasRes = entries.length > 0;
+      html += `<div class="person-card ${hasRes?'':'no-reservation'}">
+        <div class="person-name">${student}${hasRes?'':'<span class="person-no-label">미신청</span>'}</div>`;
+      if (hasRes) {
+        html += `<div class="person-slots">`;
+        entries.forEach(e => {
+          const wd = WEEKDAYS[e.date.getDay()];
+          const name = getSlotName(e.slot, e.date).replace(' (교수지원)','');
+          html += `<span class="person-slot-chip mini-tag ${e.slot.tagClass}">${fmtDisplay(e.date)}(${wd}) ${name}</span>`;
+        });
+        html += `</div>`;
+      }
+      html += `</div>`;
+    });
+  }
 
   html += `</div>`;
   document.getElementById('app').innerHTML = html;
 }
 
+function setAdminTab(tab) { adminTab = tab; renderAdmin(); }
+
 function downloadCSV() {
   const dates = getDates();
-  let csv = '\uFEFF날짜,요일,1타임(~18시),2타임(18~20시),3타임(20시이후)\n';
+  let csv = '\uFEFF날짜,요일,1타임(~18시),1타임인원,2타임(18~20시),2타임인원,3타임(20시이후),3타임인원,일별합계\n';
   dates.forEach(d => {
     const key = fmt(d);
     const wd = WEEKDAYS[d.getDay()];
     const dayData = allData[key] || {};
-    const t1 = dayData.t1 ? Object.keys(dayData.t1).join(' / ') : '';
-    const t2 = dayData.t2 ? Object.keys(dayData.t2).join(' / ') : '';
-    const t3 = dayData.t3 ? Object.keys(dayData.t3).join(' / ') : '';
-    csv += `${key},${wd},"${t1}","${t2}","${t3}"\n`;
+    const t1 = dayData.t1 ? Object.keys(dayData.t1) : [];
+    const t2 = dayData.t2 ? Object.keys(dayData.t2) : [];
+    const t3 = dayData.t3 ? Object.keys(dayData.t3) : [];
+    csv += `${key},${wd},"${t1.join('/')}",${t1.length},"${t2.join('/')}",${t2.length},"${t3.join('/')}",${t3.length},${t1.length+t2.length+t3.length}\n`;
   });
+  const submittedUsers = new Set();
+  dates.forEach(d => {
+    const dayData = allData[fmt(d)] || {};
+    SLOTS.forEach(s => { if (dayData[s.id]) Object.keys(dayData[s.id]).forEach(n => submittedUsers.add(n)); });
+  });
+  const missing = STUDENTS.filter(n => !submittedUsers.has(n));
+  if (missing.length) csv += `\n미신청자,"${missing.join(' / ')}",,,,,,\n`;
+
   const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -802,6 +884,9 @@ function doLogout() {
   currentUser = null;
   isAdminView = false;
   localSelections = {};
+  savedSelections = {};
+  allExpanded = false;
+  adminTab = 'date';
   renderLogin();
 }
 
