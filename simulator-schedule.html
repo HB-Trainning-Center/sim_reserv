@@ -234,11 +234,16 @@ body {
   position: fixed; bottom: 80px; left: 50%;
   transform: translateX(-50%) translateY(20px);
   background: #1a1a2e; color: white;
-  padding: 12px 24px; border-radius: 8px;
+  padding: 12px 20px; border-radius: 8px;
   font-size: 13px; font-weight: 500;
   opacity: 0; transition: all 0.3s; z-index: 200;
   max-width: 90vw; text-align: center;
-  line-height: 1.4;
+  line-height: 1.5;
+  word-break: keep-all;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -351,6 +356,26 @@ body {
   font-size: 10px; color: var(--accent); margin-left: 8px; font-weight: 600;
 }
 
+/* DATE RANGE PICKER */
+.date-range-picker {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 12px 16px; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.date-range-picker label { font-size: 12px; font-weight: 600; color: var(--text-sub); }
+.date-range-picker input[type="date"] {
+  padding: 6px 10px; border: 1.5px solid var(--border); border-radius: 6px;
+  font-size: 13px; font-family: inherit; color: var(--text);
+  background: white;
+}
+.date-range-picker input[type="date"]:focus { outline: none; border-color: var(--primary); }
+.btn-range-reset {
+  background: none; border: 1px solid var(--border); color: var(--text-sub);
+  padding: 5px 10px; border-radius: 6px; font-size: 11px;
+  font-family: inherit; cursor: pointer; margin-left: auto;
+}
+.btn-range-reset:hover { background: var(--bg); }
+
 /* NEW BADGE */
 .new-badge {
   position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
@@ -432,6 +457,8 @@ let localSelections = {};
 let allExpanded = false;
 let lastDataSnapshot = null;
 let isFirstLoad = true;
+let adminStartDate = null; // 관리자 조회 시작일
+let adminEndDate = null;   // 관리자 조회 종료일
 
 // ========== DATES ==========
 function getDates() {
@@ -442,6 +469,17 @@ function getDates() {
     const d = new Date(today);
     d.setDate(today.getDate() + i);
     dates.push(d);
+  }
+  return dates;
+}
+
+function getAdminDates() {
+  if (!adminStartDate || !adminEndDate) return getDates();
+  const dates = [];
+  const start = new Date(adminStartDate + 'T00:00:00');
+  const end = new Date(adminEndDate + 'T00:00:00');
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+    dates.push(new Date(d));
   }
   return dates;
 }
@@ -524,6 +562,7 @@ function doLogin() {
 // ========== FIREBASE ==========
 function loadUserData() {
   document.getElementById('app').innerHTML = '<div style="text-align:center;padding:40px;color:#888;">연결 중...</div>';
+  db.ref('reservations').off(); // 기존 리스너 제거
   db.ref('reservations').on('value', snap => {
     const newData = snap.val() || {};
     const newJson = JSON.stringify(newData);
@@ -566,7 +605,7 @@ function showNewBadge() {
 function dismissBadge() { document.getElementById('newBadgeArea').innerHTML = ''; }
 
 // ========== RESERVATION VIEW ==========
-function renderReservation() {
+function renderReservation(openStates) {
   isAdminView = false;
   const btn = document.getElementById('btnToggleView');
   btn.style.display = 'block';
@@ -593,7 +632,8 @@ function renderReservation() {
     const dayData = allData[key] || {};
     const isTodayFlag = isToday(d);
     const hasSel = sel.length > 0;
-    const isOpen = allExpanded || idx === 0;
+    // openStates가 있으면 그대로 복원, 없으면 기본 로직
+    const isOpen = openStates ? !!openStates[idx] : (allExpanded || idx === 0);
 
     const miniTags = sel.map(sid => {
       const s = SLOTS.find(x=>x.id===sid);
@@ -655,7 +695,9 @@ function toggleDate(idx) {
 
 function toggleExpandAll() {
   allExpanded = !allExpanded;
+  const scrollY = window.scrollY;
   renderReservation();
+  window.scrollTo(0, scrollY);
 }
 
 function toggleSlot(dateKey, slotId) {
@@ -665,7 +707,16 @@ function toggleSlot(dateKey, slotId) {
   if (i >= 0) arr.splice(i, 1);
   else arr.push(slotId);
   if (!arr.length) delete localSelections[dateKey];
-  renderReservation();
+  // 스크롤 위치 보존 후 재렌더링
+  const scrollY = window.scrollY;
+  // 어떤 날짜가 열려있는지 기억
+  const openStates = {};
+  getDates().forEach((d, idx) => {
+    const body = document.getElementById('body-'+idx);
+    if (body) openStates[idx] = body.classList.contains('open');
+  });
+  renderReservation(openStates);
+  window.scrollTo(0, scrollY);
 }
 
 function cancelAll() {
@@ -705,16 +756,12 @@ function submitReservation() {
   });
   db.ref().update(updates)
     .then(() => {
-      const lines = [];
+      let count = 0;
       getDates().forEach(d => {
-        const key = fmt(d);
-        const sel = localSelections[key] || [];
-        if (sel.length) {
-          const names = sel.map(sid => getSlotName(SLOTS.find(x=>x.id===sid), d).replace(' (교수지원)',''));
-          lines.push(`${fmtDisplay(d)} ${names.join('+')}`);
-        }
+        const sel = localSelections[fmt(d)] || [];
+        count += sel.length;
       });
-      showToast('✅ 저장 완료! ' + (lines.length ? lines.join(', ') : '전체 취소됨'));
+      showToast(count > 0 ? `✅ 저장 완료! (${count}건 예약)` : '✅ 전체 취소 완료');
     })
     .catch(e => showToast('오류: ' + e.message));
 }
@@ -736,7 +783,9 @@ function renderAdmin() {
   else { btn.style.display = 'block'; btn.textContent = '📝 예약하기'; }
   isAdminView = true;
 
-  const dates = getDates();
+  const dates = getAdminDates();
+  const defaultDates = getDates();
+  const isCustomRange = adminStartDate && adminEndDate;
   let totalT1=0, totalT2=0, totalT3=0;
 
   dates.forEach(d => {
@@ -754,12 +803,24 @@ function renderAdmin() {
   const missingUsers = STUDENTS.filter(n => !submittedUsers.has(n));
 
   const firstDate = dates[0], lastDate = dates[dates.length-1];
-  const rangeStr = `${fmtDisplay(firstDate)}(${WEEKDAYS[firstDate.getDay()]}) ~ ${fmtDisplay(lastDate)}(${WEEKDAYS[lastDate.getDay()]})`;
+  const rangeStr = `${fmtDisplay(firstDate)}(${WEEKDAYS[firstDate.getDay()]}) ~ ${fmtDisplay(lastDate)}(${WEEKDAYS[lastDate.getDay()]}) · ${dates.length}일간`;
+
+  // 기본 날짜값
+  const defStart = adminStartDate || fmt(defaultDates[0]);
+  const defEnd = adminEndDate || fmt(defaultDates[defaultDates.length-1]);
 
   let html = `<div class="fade-in">
     <div class="user-banner">
       <div class="user-badge"><span class="dot"></span>${currentUser}</div>
       <button class="btn-logout" onclick="doLogout()">나가기</button>
+    </div>
+
+    <div class="date-range-picker">
+      <label>조회기간</label>
+      <input type="date" id="adminStart" value="${defStart}" onchange="onAdminDateChange()">
+      <span style="color:var(--text-sub)">~</span>
+      <input type="date" id="adminEnd" value="${defEnd}" onchange="onAdminDateChange()">
+      ${isCustomRange ? '<button class="btn-range-reset" onclick="resetAdminRange()">초기화</button>' : ''}
     </div>
 
     <div class="admin-summary">
@@ -852,8 +913,24 @@ function renderAdmin() {
 
 function setAdminTab(tab) { adminTab = tab; renderAdmin(); }
 
+function onAdminDateChange() {
+  const start = document.getElementById('adminStart').value;
+  const end = document.getElementById('adminEnd').value;
+  if (start && end && start <= end) {
+    adminStartDate = start;
+    adminEndDate = end;
+    renderAdmin();
+  }
+}
+
+function resetAdminRange() {
+  adminStartDate = null;
+  adminEndDate = null;
+  renderAdmin();
+}
+
 function downloadCSV() {
-  const dates = getDates();
+  const dates = getAdminDates();
   let csv = '\uFEFF날짜,요일,1타임(~18시),1타임인원,2타임(18~20시),2타임인원,3타임(20시이후),3타임인원,일별합계\n';
   dates.forEach(d => {
     const key = fmt(d);
@@ -864,12 +941,12 @@ function downloadCSV() {
     const t3 = dayData.t3 ? Object.keys(dayData.t3) : [];
     csv += `${key},${wd},"${t1.join('/')}",${t1.length},"${t2.join('/')}",${t2.length},"${t3.join('/')}",${t3.length},${t1.length+t2.length+t3.length}\n`;
   });
-  const submittedUsers = new Set();
+  const submittedUsers2 = new Set();
   dates.forEach(d => {
     const dayData = allData[fmt(d)] || {};
-    SLOTS.forEach(s => { if (dayData[s.id]) Object.keys(dayData[s.id]).forEach(n => submittedUsers.add(n)); });
+    SLOTS.forEach(s => { if (dayData[s.id]) Object.keys(dayData[s.id]).forEach(n => submittedUsers2.add(n)); });
   });
-  const missing = STUDENTS.filter(n => !submittedUsers.has(n));
+  const missing = STUDENTS.filter(n => !submittedUsers2.has(n));
   if (missing.length) csv += `\n미신청자,"${missing.join(' / ')}",,,,,,\n`;
 
   const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
@@ -887,6 +964,8 @@ function doLogout() {
   savedSelections = {};
   allExpanded = false;
   adminTab = 'date';
+  adminStartDate = null;
+  adminEndDate = null;
   renderLogin();
 }
 
