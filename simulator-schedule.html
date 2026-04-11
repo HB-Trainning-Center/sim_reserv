@@ -202,6 +202,18 @@ body {
 .date-arrow { transition: transform 0.2s; color: var(--text-sub); }
 .date-arrow.open { transform: rotate(180deg); }
 
+/* T2 STATUS */
+.t2-status {
+  font-size: 10px; font-weight: 700; padding: 2px 8px;
+  border-radius: 4px; white-space: nowrap;
+}
+.t2-status.confirmed { background: #dcfce7; color: #166534; }
+.t2-status.pending { background: #fef3c7; color: #92400e; }
+.t2-hint {
+  font-size: 10px; color: var(--text-sub); margin-top: 2px;
+  line-height: 1.3;
+}
+
 /* SUBMIT BAR */
 .submit-bar {
   position: fixed; bottom: 0; left: 0; right: 0;
@@ -658,12 +670,23 @@ function renderReservation(openStates) {
       const names = dayData[s.id] ? Object.keys(dayData[s.id]) : [];
       const isSelected = sel.includes(s.id);
       const displayName = getSlotName(s, d);
+      const isWeekdayT2 = s.id === 't2' && !isWeekend(d);
+      const t2Confirmed = names.length >= 2;
+      let statusHtml = '';
+      let hintHtml = '';
+      if (isWeekdayT2) {
+        statusHtml = t2Confirmed
+          ? '<span class="t2-status confirmed">확정</span>'
+          : '<span class="t2-status pending">미정</span>';
+        hintHtml = '<div class="t2-hint">※ 2인 이상 신청 시 야간 교수지원이 가능합니다</div>';
+      }
       html += `
         <div class="time-slot ${isSelected?'selected':''}" onclick="toggleSlot('${key}','${s.id}')">
           <div class="check"></div>
           <div class="slot-info">
-            <div class="slot-name">${displayName}</div>
+            <div class="slot-name">${displayName} ${statusHtml}</div>
             <div class="slot-time">${s.time}</div>
+            ${hintHtml}
           </div>
           <div class="slot-count">${names.length}명 신청</div>
         </div>`;
@@ -867,9 +890,13 @@ function renderAdmin() {
       SLOTS.forEach(s => {
         const names = dayData[s.id] ? Object.keys(dayData[s.id]) : [];
         const displayName = getSlotName(s, d);
+        const isWeekdayT2 = s.id === 't2' && !isWeekend(d);
+        const t2Status = isWeekdayT2 ? (names.length >= 2
+          ? ' <span class="t2-status confirmed">확정</span>'
+          : ' <span class="t2-status pending">미정</span>') : '';
         html += `<div class="admin-slot">
           <div class="admin-slot-title">
-            <span class="admin-slot-tag mini-tag ${s.tagClass}">${displayName}</span>
+            <span class="admin-slot-tag mini-tag ${s.tagClass}">${displayName}</span>${t2Status}
             <span style="font-size:11px;color:var(--text-sub)">${s.time}</span>
             <span style="font-size:11px;font-weight:700;margin-left:auto">${names.length}명</span>
           </div>
